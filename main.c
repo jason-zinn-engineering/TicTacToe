@@ -14,6 +14,7 @@ void instruct()
 {
     printf("[1][2][3]\n[4][5][6]\n[7][8][9]\nThese are the keys that you will use to pick your position\n");
 }
+
 /* Return a pointer to mutate board location */
 char* boardLocation(char input)
 {
@@ -51,12 +52,20 @@ char* boardLocation(char input)
     }
 }
 
-/*  */
+/* Take Tic Tac Toe Pointer and apply */
+void changeBoard(char input)
+{
+    char *ptr = boardLocation(input);
+    char location = *ptr;
+    location = 'X';
+}
+
 
 int main()
 {
     printf("~ Welcome to jason-zinn-engineering Tic Tac Toe ~\n");
     printf("-------------------------------------------------\n");
     instruct();
+    
     return 0;
 }
