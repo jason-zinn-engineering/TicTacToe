@@ -15,6 +15,16 @@ void instruct()
     printf("[1][2][3]\n[4][5][6]\n[7][8][9]\nThese are the keys that you will use to pick your position\n");
 }
 
+void printBoard()
+{
+    for (int i = 0; i < 3; i++) {
+        printf("\n");
+        for (int j = 0; j < 3; j++) {
+            printf("%c ", board[i][j]);
+        }
+    }
+}
+
 /* Return a pointer to mutate board location */
 char* boardLocation(char input)
 {
@@ -60,12 +70,22 @@ void changeBoard(char input)
     location = 'X';
 }
 
+void gameRequest()
+{
+    char locate;
+    printf("Select a location => ");
+    scanf("%c", &locate);
+    changeBoard(locate);
+    printBoard();
+    
+}
+
 
 int main()
 {
     printf("~ Welcome to jason-zinn-engineering Tic Tac Toe ~\n");
     printf("-------------------------------------------------\n");
     instruct();
-    
+    gameRequest();    
     return 0;
 }
