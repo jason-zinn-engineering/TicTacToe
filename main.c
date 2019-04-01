@@ -1,6 +1,7 @@
 /*
  @Author Jason Zinn
  @Date April 1st, 2019
+ *This is a simple Tic Tac Toe Game Written in C.
  */
 #include <stdio.h>
 /* Define Board */
@@ -14,7 +15,7 @@ void instruct()
 {
     printf("[1][2][3]\n[4][5][6]\n[7][8][9]\nThese are the keys that you will use to pick your position\n");
 }
-
+/* Here We Print The Board from Reference */
 void printBoard()
 {
     for (int i = 0; i < 3; i++) {
@@ -24,7 +25,6 @@ void printBoard()
         }
     }
 }
-
 /* Return a pointer to mutate board location */
 char* boardLocation(char input)
 {
@@ -61,15 +61,13 @@ char* boardLocation(char input)
             break;
     }
 }
-
 /* Take Tic Tac Toe Pointer and apply */
 void changeBoard(char input)
 {
-    char *ptr = boardLocation(input);
-    char location = *ptr;
-    location = 'X';
+    char* temp = boardLocation(input);
+    *temp = 'X';
 }
-
+/* Game Function */
 void gameRequest()
 {
     char locate;
@@ -79,13 +77,13 @@ void gameRequest()
     printBoard();
     
 }
-
-
+/* This is the running function */
 int main()
 {
     printf("~ Welcome to jason-zinn-engineering Tic Tac Toe ~\n");
     printf("-------------------------------------------------\n");
     instruct();
-    gameRequest();    
+    printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+    printf("START!");
     return 0;
 }
