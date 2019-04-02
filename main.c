@@ -18,7 +18,11 @@ int main(void);
 void instruct(void);
 void printBoard(void);
 void changeBoard(char);
-char *boardLocation(char);
+void gameRequest(void);
+char **boardLocation(char);
+char boardLocationGetter(char);
+int checkWinner(char[3][3]);
+int cpuCheckWinner(char[3][3]);
 /*
  ***********************************************************************************************************************
  VARIABLES
@@ -61,14 +65,13 @@ void instruct()
     
 }
 /* Take Tic Tac Toe Pointer and apply */
-void changeBoard(char input)
+void changeBoardPrintBoard(char input)
 {
-    char* temp = boardLocation(input);
+    printf("~~~~~\n...Taking Turn\n~~~~~\n");
+    /* Change Board */
+    char* temp = *boardLocation(input);
     *temp = 'X';
-}
-/* Here We Print The Board from Reference */
-void printBoard()
-{
+    /* Print Board */
     for (int i = 0; i < 3; i++) {
         printf("\n");
         for (int j = 0; j < 3; j++) {
@@ -82,61 +85,132 @@ void gameRequest()
     char locate;
     printf("Select a location => ");
     scanf("%c", &locate);
-    changeBoard(locate);
+    changeBoardPrintBoard(locate);
+    printf("\n-------------------------------------------------\n");
+    printf("Computer Turn\n");
+}
+/*
+ ** ~ Computer Turn ~
+ ** This function takes a board and returns possible move locations
+ ** Then it randomly selects one of these locations and mutates " | -> O "
+ */
+void computerTurn(char board[3][3])
+{
+    /* loop through board, count unaltered, make array with pointers to unaltered memory */
+    int barCounter = 0;
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            if (board[i][j] == '|') {
+                barCounter++;
+            }
+        }
+    }
+    /* Make a char ptr array of counter size */
+    char *arr[barCounter];
+    /* start from arr[0] of an arr which size is known and start placing board memlocs into the ptrs */
+    int arrayIndexer = 0;
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            if (board[i][j] == '|') {
+                arr[arrayIndexer] = & board[i][j];
+                arrayIndexer++;
+            }
+        }
+    }
+    /* This component chooses a random location in the array */
+    int randomLocationInArr = rand() % arrayIndexer;
+    char *arrayOfPossibleMovesPtr = arr[randomLocationInArr];
+    *arrayOfPossibleMovesPtr = 'O';
     printBoard();
     printf("\n-------------------------------------------------\n");
-    printf("Computer Turn");
-    
+    printf("Your Turn");
 }
 /* Return a pointer to mutate board location */
-char* boardLocation(char input)
+char** boardLocation(char input)
 {
     /* Make Default imaginary */
-    char waste = 'X';
-    char* garbage = &waste;
+    char trash = 'X';
+    char *waste = &trash;
+    char** garbage = &waste;
     switch (input) {
         case '1':
-            return &board[0][0];
+            return &one;
             break;
         case '2':
-            return &board[0][1];
+            return &two;
             break;
         case '3':
-            return &board[0][2];
+            return &three;
             break;
         case '4':
-            return &board[1][0];
+            return &four;
             break;
         case '5':
-            return &board[1][1];
+            return &five;
             break;
         case '6':
-            return &board[1][2];
+            return &six;
             break;
         case '7':
-            return &board[2][0];
+            return &seven;
             break;
         case '8':
-            return &board[2][1];
+            return &eight;
             break;
         case '9':
-            return &board[2][2];
+            return &nine;
             break;
         default:
             return garbage;
             break;
     }
 }
-
+/* Return values 1-9 */
+char boardLocationGetter(char input)
+{
+    /* Make Default X */
+    switch (input) {
+        case '1':
+            return *one;
+            break;
+        case '2':
+            return *two;
+            break;
+        case '3':
+            return *three;
+            break;
+        case '4':
+            return *four;
+            break;
+        case '5':
+            return *five;
+            break;
+        case '6':
+            return *six;
+            break;
+        case '7':
+            return *seven;
+            break;
+        case '8':
+            return *eight;
+            break;
+        case '9':
+            return *nine;
+            break;
+        default:
+            return 'X';
+            break;
+    }
+}
 /* Check for a Winner */
 int checkWinner(char board[3][3])
 {
     
-    if (board[0][0] == 'X' && board[0][1] == 'X' && board[0][2] == 'X') {
+    if (*one == 'X' && *two == 'X' && *three == 'X') {
         printf("GAME OVER");
         return 0;
     }
-    else if (board[0][0] == 'X' && board[1][1] == 'X' && board[2][2] == 'X') {
+    else if (*one == 'X' && *five == 'X' && *nine == 'X') {
         printf("GAME OVER");
         return 0;
     }
@@ -188,42 +262,7 @@ int cpuCheckWinner(char board[3][3])
     }
     else {printf("! Have to crawl before you can walk !\n\n"); return 1;}
 }
-/*
-** ~ Computer Turn ~
-** This function takes a board and returns possible move locations
-** Then it randomly selects one of these locations and mutates " | -> O "
- */
-void computerTurn(char board[3][3])
-{
-    /* loop through board, count unaltered, make array with pointers to unaltered memory */
-    int barCounter = 0;
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
-            if (board[i][j] == '|') {
-                barCounter++;
-            }
-        }
-    }
-    /* Make a char ptr array of counter size */
-    char *arr[barCounter];
-    /* start from arr[0] of an arr which size is known and start placing board memlocs into the ptrs */
-    int arrayIndexer = 0;
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
-            if (board[i][j] == '|') {
-                arr[arrayIndexer] = & board[i][j];
-                arrayIndexer++;
-            }
-        }
-    }
-    /* This component chooses a random location in the array */
-    int randomLocationInArr = rand() % arrayIndexer;
-    char *arrayOfPossibleMovesPtr = arr[randomLocationInArr];
-    *arrayOfPossibleMovesPtr = 'O';
-    printBoard();
-    printf("\n-------------------------------------------------\n");
-    printf("Your Turn");
-}
+
 /* Game Loop, run computer turn then gives player a chance then continue */
 void gameLoop()
 {
