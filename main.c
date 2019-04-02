@@ -5,6 +5,7 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
+# include <string.h>
 /* Define Board */
 char board[3][3] = {
     {'|','|','|'},
@@ -123,6 +124,36 @@ int checkWinner(char board[3][3])
     }
     else {printf("! Have to crawl before you can walk !\n\n"); return 1;}
 }
+/* Check for CPU Win */
+int cpuCheckWinner(char board[3][3])
+{
+    
+    if (board[0][0] == 'O' && board[0][1] == 'O' && board[0][2] == 'O') {
+        printf("GAME OVER");
+        return 0;
+    }
+    else if (board[0][0] == 'O' && board[1][1] == 'O' && board[2][2] == 'O') {
+        printf("GAME OVER");
+        return 0;
+    }
+    else if (board[0][0] == 'O' && board[1][0] == 'O' && board[2][0] == 'O') {
+        printf("GAME OVER");
+        return 0;
+    }
+    else if (board[2][2] == 'O' && board[2][1] == 'O' && board[2][0] == 'O') {
+        printf("GAME OVER");
+        return 0;
+    }
+    else if (board[0][2] == 'O' && board[1][2] == 'O' && board[2][2] == 'O') {
+        printf("GAME OVER");
+        return 0;
+    }
+    else if (board[2][0] == 'O' && board[1][1] == 'O' && board[0][2] == 'O') {
+        printf("GAME OVER");
+        return 0;
+    }
+    else {printf("! Have to crawl before you can walk !\n\n"); return 1;}
+}
 /*
 ** ~ Computer Turn ~
 ** This function takes a board and returns possible move locations
@@ -159,21 +190,41 @@ void computerTurn(char board[3][3])
     printf("\n-------------------------------------------------\n");
     printf("Your Turn");
 }
-
 /* Game Loop, run computer turn then gives player a chance then continue */
 void gameLoop()
 {
-    while (checkWinner(board) != 0) {
+    while ((checkWinner(board) != 0) && (cpuCheckWinner(board) != 0)) {
         gameRequest();
         computerTurn(board);
-
-        
     }
 }
-
+/* File Writer */
+void writer(char board[3][3])
+{
+    FILE*filePointer = fopen("File.txt", "w");
+    if (filePointer==NULL){printf("ERROR");};
+    /* Copy Board to Writeable */
+    int BUFFER_SIZE = 9;
+    int ARRAY_BUFFER = 0;
+    char writeable[BUFFER_SIZE];
+    for (int i=0; i<3; i++) {
+        for (int j=0; j<3; j++) {
+            writeable[ARRAY_BUFFER] = board[i][j];
+            ARRAY_BUFFER++;
+        }
+    }
+    /* Write to File and Close */
+    fprintf(filePointer, "%s", writeable);
+    fclose(filePointer);
+    fflush(filePointer);
+    
+}
 /* This is our main return function of our program */
 int main()
 {
+    /* File Manipulation */
+    writer(board);
+    /* Tic Tac Toe Game */
     printf("~ Welcome to jason-zinn-engineering Tic Tac Toe ~\n");
     printf("-------------------------------------------------\n");
     instruct();
