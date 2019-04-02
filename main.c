@@ -4,6 +4,7 @@
  *This is a simple Tic Tac Toe Game Written in C.
  */
 #include <stdio.h>
+#include <stdlib.h>
 /* Define Board */
 char board[3][3] = {
     {'|','|','|'},
@@ -38,6 +39,9 @@ char *nine = &board[2][2];
 /* Return a pointer to mutate board location */
 char* boardLocation(char input)
 {
+    /* Make Default imaginary */
+    char waste = 'X';
+    char* garbage = &waste;
     switch (input) {
         case '1':
             return &board[0][0];
@@ -67,7 +71,7 @@ char* boardLocation(char input)
             return &board[2][2];
             break;
         default:
-            return &board[1][1];
+            return garbage;
             break;
     }
 }
@@ -85,30 +89,39 @@ void gameRequest()
     scanf("%c", &locate);
     changeBoard(locate);
     printBoard();
+    printf("\n-------------------------------------------------\n");
+    printf("Computer Turn");
     
 }
 /* Check for a Winner */
-void checkWinner(char board[3][3])
+int checkWinner(char board[3][3])
 {
+    
     if (board[0][0] == 'X' && board[0][1] == 'X' && board[0][2] == 'X') {
         printf("GAME OVER");
+        return 0;
     }
     else if (board[0][0] == 'X' && board[1][1] == 'X' && board[2][2] == 'X') {
         printf("GAME OVER");
+        return 0;
     }
     else if (board[0][0] == 'X' && board[1][0] == 'X' && board[2][0] == 'X') {
         printf("GAME OVER");
+        return 0;
     }
     else if (board[2][2] == 'X' && board[2][1] == 'X' && board[2][0] == 'X') {
         printf("GAME OVER");
+        return 0;
     }
     else if (board[0][2] == 'X' && board[1][2] == 'X' && board[2][2] == 'X') {
         printf("GAME OVER");
+        return 0;
     }
     else if (board[2][0] == 'X' && board[1][1] == 'X' && board[0][2] == 'X') {
         printf("GAME OVER");
+        return 0;
     }
-    else {printf("Good Move !");}
+    else {printf("! Have to crawl before you can walk !\n\n"); return 1;}
 }
 /*
 ** ~ Computer Turn ~
@@ -138,6 +151,24 @@ void computerTurn(char board[3][3])
             }
         }
     }
+    /* This component chooses a random location in the array */
+    int randomLocationInArr = rand() % arrayIndexer;
+    char *arrayOfPossibleMovesPtr = arr[randomLocationInArr];
+    *arrayOfPossibleMovesPtr = 'O';
+    printBoard();
+    printf("\n-------------------------------------------------\n");
+    printf("Your Turn");
+}
+
+/* Game Loop, run computer turn then gives player a chance then continue */
+void gameLoop()
+{
+    while (checkWinner(board) != 0) {
+        gameRequest();
+        computerTurn(board);
+
+        
+    }
 }
 
 /* This is our main return function of our program */
@@ -147,7 +178,7 @@ int main()
     printf("-------------------------------------------------\n");
     instruct();
     printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-    printf("START!");
-    
+    printf("START!\n");
+    gameLoop();
     return 0;
 }
