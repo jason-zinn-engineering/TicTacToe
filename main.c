@@ -16,8 +16,8 @@
  */
 int main(void);
 void instruct(void);
-void printBoard(void);
-void changeBoard(char);
+void changeBoardPrintBoard(char);
+void changeBoardPrintBoardCPU(char*);
 void gameRequest(void);
 char **boardLocation(char);
 char boardLocationGetter(char);
@@ -46,6 +46,10 @@ char *six = &board[1][2];
 char *seven = &board[2][0];
 char *eight = &board[2][1];
 char *nine = &board[2][2];
+ /*
+ ** !important ~ Locate first location in memory
+ */
+char *matrixFirstMem = &board[0][0];
 /*
  ***********************************************************************************************************************
  FUNCTIONS
@@ -78,6 +82,11 @@ void changeBoardPrintBoard(char input)
             printf("%c ", board[i][j]);
         }
     }
+}
+/* Take Tic Tac Toe Pointer and apply */
+void changeBoardPrintBoardCPU(char *location)
+{
+    *location = 'O';
 }
 /* Player Turn */
 void gameRequest()
@@ -121,13 +130,28 @@ void computerTurn(char board[3][3])
     int randomLocationInArr = rand() % arrayIndexer;
     char *arrayOfPossibleMovesPtr = arr[randomLocationInArr];
     *arrayOfPossibleMovesPtr = 'O';
-    printBoard();
+    changeBoardPrintBoardCPU(arrayOfPossibleMovesPtr);
     printf("\n-------------------------------------------------\n");
     printf("Your Turn");
 }
 /* Return a pointer to mutate board location */
+/*
+ Address of A [ I ][ J ] Column Major Wise = B + W * [( I ) + (M *  J) ]
+ int address =
+ Where,
+ B = Base address
+ I = Row subscript of element whose address is to be found
+ J = Column subscript of element whose address is to be found
+ W = Storage Size of one element stored in the array (in byte)
+ Lr = Lower limit of row/start row index of matrix, if not given assume 0 (zero)
+ Lc = Lower limit of column/start column index of matrix, if not given assume 0 (zero)
+ M = Number of row of the given matrix
+ N = Number of column of the given matrix
+ */
+
 char** boardLocation(char input)
 {
+   
     /* Make Default imaginary */
     char trash = 'X';
     char *waste = &trash;
@@ -295,6 +319,7 @@ void writer(char board[3][3])
 /* This is our main return function of our program */
 int main()
 {
+    printf("%d", *matrixFirstMem);
     /*
      ** Multi-threading
      */
