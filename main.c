@@ -25,6 +25,16 @@ void printBoard()
         }
     }
 }
+/* Create Syntactic Sugar for Array Locations */
+char *one = &board[0][0];
+char *two = &board[0][1];
+char *three = &board[0][2];
+char *four = &board[1][0];
+char *five = &board[1][1];
+char *six = &board[1][2];
+char *seven = &board[2][0];
+char *eight = &board[2][1];
+char *nine = &board[2][2];
 /* Return a pointer to mutate board location */
 char* boardLocation(char input)
 {
@@ -77,7 +87,60 @@ void gameRequest()
     printBoard();
     
 }
-/* This is the running function */
+/* Check for a Winner */
+void checkWinner(char board[3][3])
+{
+    if (board[0][0] == 'X' && board[0][1] == 'X' && board[0][2] == 'X') {
+        printf("GAME OVER");
+    }
+    else if (board[0][0] == 'X' && board[1][1] == 'X' && board[2][2] == 'X') {
+        printf("GAME OVER");
+    }
+    else if (board[0][0] == 'X' && board[1][0] == 'X' && board[2][0] == 'X') {
+        printf("GAME OVER");
+    }
+    else if (board[2][2] == 'X' && board[2][1] == 'X' && board[2][0] == 'X') {
+        printf("GAME OVER");
+    }
+    else if (board[0][2] == 'X' && board[1][2] == 'X' && board[2][2] == 'X') {
+        printf("GAME OVER");
+    }
+    else if (board[2][0] == 'X' && board[1][1] == 'X' && board[0][2] == 'X') {
+        printf("GAME OVER");
+    }
+    else {printf("Good Move !");}
+}
+/*
+** ~ Computer Turn ~
+** This function takes a board and returns possible move locations
+** Then it randomly selects one of these locations and mutates " | -> O "
+ */
+void computerTurn(char board[3][3])
+{
+    /* loop through board, count unaltered, make array with pointers to unaltered memory */
+    int barCounter = 0;
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            if (board[i][j] == '|') {
+                barCounter++;
+            }
+        }
+    }
+    /* Make a char ptr array of counter size */
+    char *arr[barCounter];
+    /* start from arr[0] of an arr which size is known and start placing board memlocs into the ptrs */
+    int arrayIndexer = 0;
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            if (board[i][j] == '|') {
+                arr[arrayIndexer] = & board[i][j];
+                arrayIndexer++;
+            }
+        }
+    }
+}
+
+/* This is our main return function of our program */
 int main()
 {
     printf("~ Welcome to jason-zinn-engineering Tic Tac Toe ~\n");
@@ -85,5 +148,6 @@ int main()
     instruct();
     printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
     printf("START!");
+    
     return 0;
 }
