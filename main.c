@@ -1,7 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <pthread.h>
 /*
  ***********************************************************************************************************************
  @Author Jason Zinn
@@ -9,20 +5,16 @@
  *This is a simple Tic Tac Toe Game Written in C.
  ***********************************************************************************************************************
  */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <pthread.h>
 /*
  ***********************************************************************************************************************
  File Architecture
  ***********************************************************************************************************************
  */
 int main(void);
-void instruct(void);
-void changeBoardPrintBoard(char);
-void changeBoardPrintBoardCPU(char*);
-void gameRequest(void);
-char **boardLocation(char);
-char boardLocationGetter(char);
-int checkWinner(char[3][3]);
-int cpuCheckWinner(char[3][3]);
 /*
  ***********************************************************************************************************************
  VARIABLES
@@ -36,6 +28,8 @@ char board[3][3] = {
     {'|','|','|'},
     {'|','|','|'}
 };
+/* Retrieve first address in matrix */
+char *firstMemLoc = &board[0][0];
 /* Create Syntactic Sugar for Array Locations */
 char *one = &board[0][0];
 char *two = &board[0][1];
@@ -47,10 +41,6 @@ char *seven = &board[2][0];
 char *eight = &board[2][1];
 char *nine = &board[2][2];
  /*
- ** !important ~ Locate first location in memory
- */
-char *matrixFirstMem = &board[0][0];
-/*
  ***********************************************************************************************************************
  FUNCTIONS
  1. instruct => Print Directions
@@ -68,13 +58,24 @@ void instruct()
     printf("START!\n");
     
 }
+/* return any matrix memory location */
+int memLoc(int input)
+{
+    int trickyPtr = (int) (firstMemLoc + sizeof(char) * (input));
+    return trickyPtr;
+}
+int boardLocation(int input)
+{
+    /* return specific location of number 1-9 */
+    return memLoc(input);
+}
 /* Take Tic Tac Toe Pointer and apply */
-void changeBoardPrintBoard(char input)
+void changeBoardPrintBoard(int input)
 {
     printf("~~~~~\n...Taking Turn\n~~~~~\n");
     /* Change Board */
-    char* temp = *boardLocation(input);
-    *temp = 'X';
+    char* accuracy = (char*) boardLocation(input);
+    *accuracy = 'O';
     /* Print Board */
     for (int i = 0; i < 3; i++) {
         printf("\n");
@@ -134,98 +135,7 @@ void computerTurn(char board[3][3])
     printf("\n-------------------------------------------------\n");
     printf("Your Turn");
 }
-/* Return a pointer to mutate board location */
-/*
- Address of A [ I ][ J ] Column Major Wise = B + W * [( I ) + (M *  J) ]
- int address =
- Where,
- B = Base address
- I = Row subscript of element whose address is to be found
- J = Column subscript of element whose address is to be found
- W = Storage Size of one element stored in the array (in byte)
- Lr = Lower limit of row/start row index of matrix, if not given assume 0 (zero)
- Lc = Lower limit of column/start column index of matrix, if not given assume 0 (zero)
- M = Number of row of the given matrix
- N = Number of column of the given matrix
- */
 
-char** boardLocation(char input)
-{
-   
-    /* Make Default imaginary */
-    char trash = 'X';
-    char *waste = &trash;
-    char** garbage = &waste;
-    switch (input) {
-        case '1':
-            return &one;
-            break;
-        case '2':
-            return &two;
-            break;
-        case '3':
-            return &three;
-            break;
-        case '4':
-            return &four;
-            break;
-        case '5':
-            return &five;
-            break;
-        case '6':
-            return &six;
-            break;
-        case '7':
-            return &seven;
-            break;
-        case '8':
-            return &eight;
-            break;
-        case '9':
-            return &nine;
-            break;
-        default:
-            return garbage;
-            break;
-    }
-}
-/* Return values 1-9 */
-char boardLocationGetter(char input)
-{
-    /* Make Default X */
-    switch (input) {
-        case '1':
-            return *one;
-            break;
-        case '2':
-            return *two;
-            break;
-        case '3':
-            return *three;
-            break;
-        case '4':
-            return *four;
-            break;
-        case '5':
-            return *five;
-            break;
-        case '6':
-            return *six;
-            break;
-        case '7':
-            return *seven;
-            break;
-        case '8':
-            return *eight;
-            break;
-        case '9':
-            return *nine;
-            break;
-        default:
-            return 'X';
-            break;
-    }
-}
 /* Check for a Winner */
 int checkWinner(char board[3][3])
 {
@@ -319,14 +229,7 @@ void writer(char board[3][3])
 /* This is our main return function of our program */
 int main()
 {
-    printf("%d", *matrixFirstMem);
-    /*
-     ** Multi-threading
-     */
-    
-    /*
-     ** Multi-threading STOP
-     */
+
     /* File Manipulation */
     writer(board);
     /* Tic Tac Toe Game */
